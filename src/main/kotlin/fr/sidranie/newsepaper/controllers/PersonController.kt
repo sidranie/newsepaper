@@ -5,8 +5,11 @@ import fr.sidranie.newsepaper.repositories.PersonRepository
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.net.URI
 
 @RestController
 @RequestMapping("/people")
@@ -24,5 +27,12 @@ class PersonController(val repository: PersonRepository) {
         } else {
             return ResponseEntity.notFound().build<Person>()
         }
+    }
+
+    @PostMapping
+    fun createPerson(@RequestBody toCreate: Person): ResponseEntity<Person> {
+        val person = toCreate.copy(id=null)
+        repository.save<Person>(person)
+        return ResponseEntity.created(URI("/people/${person.id}")).body(person)
     }
 }
