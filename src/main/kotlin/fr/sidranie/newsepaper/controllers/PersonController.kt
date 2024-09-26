@@ -1,7 +1,8 @@
 package fr.sidranie.newsepaper.controllers
 
 import fr.sidranie.newsepaper.entities.Person
-import fr.sidranie.newsepaper.repositories.PersonRepository
+import fr.sidranie.newsepaper.exceptions.NotFoundException
+import fr.sidranie.newsepaper.services.PersonService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -15,62 +16,41 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/people")
-class PersonController(val repository: PersonRepository) {
+class PersonController(private val service: PersonService) {
 
     @GetMapping
-    fun getAll() = ResponseEntity.ok(repository.findAll())
+    fun getAll() = ResponseEntity.ok<Iterable<Person>>(service.findAllPeople())
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Long): ResponseEntity<Person> {
-        val user = repository.findById(id)
+        val user = service.findPersonById(id)
 
-        if (user.isPresent) {
-            return ResponseEntity.ok(user.get())
-        } else {
-            return ResponseEntity.notFound().build<Person>()
-        }
+        return if (user != null)
+            ResponseEntity.ok<Person>(user)
+        else
+            ResponseEntity.notFound().build<Person>()
     }
 
     @PostMapping
     fun createPerson(@RequestBody toCreate: Person): ResponseEntity<Person> {
         val person = toCreate.copy(id=null)
-        repository.save<Person>(person)
+        service.createPerson(person)
         return ResponseEntity.created(URI("/people/${person.id}")).body(person)
     }
 
     @DeleteMapping("/{id}")
     fun deletePerson(@PathVariable("id") id: Long): ResponseEntity<Person> {
-        repository.deleteById(id)
+        service.deletePersonById(id)
         return ResponseEntity.noContent().build()
     }
 
     @PatchMapping("/{id}")
     fun updatePerson(@PathVariable("id") id: Long, @RequestBody updates: Person): ResponseEntity<Person> {
-        val gotPerson = repository.findById(id)
-        if (gotPerson.isEmpty()) {
+        try {
+            val person = service.patchPerson(id, updates)
+            return ResponseEntity.ok(person)
+        } catch (_: NotFoundException) {
             return ResponseEntity.notFound().build<Person>()
         }
-
-        var person = gotPerson.get()
-
-        if (updates.identifier != null) {
-            person.identifier = updates.identifier
-        }
-        if (updates.email != null) {
-            person.email = updates.email
-        }
-        if (updates.password != null) {
-            person.password = updates.password
-        }
-        if (updates.givenName != null) {
-            person.givenName = updates.givenName
-        }
-        if (updates.familyName != null) {
-            person.familyName = updates.familyName
-        }
-
-        repository.save(person)
-
-        return ResponseEntity.ok(person)
     }
 }
