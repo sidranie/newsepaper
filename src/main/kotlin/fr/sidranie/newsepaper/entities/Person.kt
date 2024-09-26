@@ -13,15 +13,15 @@ data class Person(
     @Id
     @Column(nullable = false, unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long?,
+    var id: Long?,
     @Column(nullable = false, unique = true)
-    val identifier: String?,
+    var identifier: String?,
     @Column(nullable = false, unique = true)
-    val email: String?,
+    var email: String?,
     @Column(nullable = false)
-    val password: String?,
+    var password: String?,
     @Column(nullable = false)
-    val givenName: String?,
+    var givenName: String?,
     @Column(nullable = false)
-    val familyName: String?,
+    var familyName: String?,
 )

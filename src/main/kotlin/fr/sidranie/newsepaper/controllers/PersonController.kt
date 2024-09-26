@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -41,5 +42,35 @@ class PersonController(val repository: PersonRepository) {
     fun deletePerson(@PathVariable("id") id: Long): ResponseEntity<Person> {
         repository.deleteById(id)
         return ResponseEntity.noContent().build()
+    }
+
+    @PatchMapping("/{id}")
+    fun updatePerson(@PathVariable("id") id: Long, @RequestBody updates: Person): ResponseEntity<Person> {
+        val gotPerson = repository.findById(id)
+        if (gotPerson.isEmpty()) {
+            return ResponseEntity.notFound().build<Person>()
+        }
+
+        var person = gotPerson.get()
+
+        if (updates.identifier != null) {
+            person.identifier = updates.identifier
+        }
+        if (updates.email != null) {
+            person.email = updates.email
+        }
+        if (updates.password != null) {
+            person.password = updates.password
+        }
+        if (updates.givenName != null) {
+            person.givenName = updates.givenName
+        }
+        if (updates.familyName != null) {
+            person.familyName = updates.familyName
+        }
+
+        repository.save(person)
+
+        return ResponseEntity.ok(person)
     }
 }
