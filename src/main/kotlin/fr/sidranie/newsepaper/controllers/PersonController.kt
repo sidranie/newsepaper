@@ -3,6 +3,7 @@ package fr.sidranie.newsepaper.controllers
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.repositories.PersonRepository
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -34,5 +35,11 @@ class PersonController(val repository: PersonRepository) {
         val person = toCreate.copy(id=null)
         repository.save<Person>(person)
         return ResponseEntity.created(URI("/people/${person.id}")).body(person)
+    }
+
+    @DeleteMapping("/{id}")
+    fun deletePerson(@PathVariable("id") id: Long): ResponseEntity<Person> {
+        repository.deleteById(id)
+        return ResponseEntity.noContent().build()
     }
 }
