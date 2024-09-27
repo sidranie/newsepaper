@@ -8,8 +8,16 @@ import org.springframework.stereotype.Service
 @Service
 class PersonService(private val repository: PersonRepository) {
 
-    fun findAllPeople(): Iterable<Person> = repository.findAll()
-    
+    fun findAllPeople(isPublisher: Boolean?): Iterable<Person> {
+        var people = repository.findAll()
+
+        if (isPublisher != null) {
+            people = people.filter { it.isPublisher == isPublisher }
+        }
+
+        return people
+    }
+
     fun findPersonById(id: Long): Person? = repository.findById(id).orElse(null)
     
     fun createPerson(person: Person) {

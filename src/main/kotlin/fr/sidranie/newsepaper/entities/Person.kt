@@ -24,4 +24,6 @@ data class Person(
     var givenName: String?,
     @Column(nullable = false)
     var familyName: String?,
+    @Column(nullable = false)
+    var isPublisher: Boolean? = false
 )

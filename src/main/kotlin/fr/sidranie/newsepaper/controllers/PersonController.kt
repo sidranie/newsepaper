@@ -3,6 +3,7 @@ package fr.sidranie.newsepaper.controllers
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.PersonService
+import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,7 +20,8 @@ import java.net.URI
 class PersonController(private val service: PersonService) {
 
     @GetMapping
-    fun getAll() = ResponseEntity.ok<Iterable<Person>>(service.findAllPeople())
+    fun getAll(@PathParam("isPublisher") isPublisher: Boolean?) =
+        ResponseEntity.ok<Iterable<Person>>(service.findAllPeople(isPublisher))
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Long): ResponseEntity<Person> {
