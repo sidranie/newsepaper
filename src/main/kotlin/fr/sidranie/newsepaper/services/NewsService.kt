@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class NewsService(private val repository: NewsRepository) {
+
     fun findAllNews(): List<News> = repository.findAll().toList()
 
     fun findNewsById(id: Long): News? =
@@ -16,9 +17,7 @@ class NewsService(private val repository: NewsRepository) {
         repository.save<News>(news)
     }
 
-    fun deleteNews(id: Long) {
-        repository.deleteById(id)
-    }
+    fun deleteNews(id: Long) = repository.deleteById(id)
 
     fun patchNews(id: Long, updates: News): News {
         var news = findNewsById(id)
