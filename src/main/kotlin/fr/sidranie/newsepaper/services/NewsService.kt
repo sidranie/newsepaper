@@ -8,7 +8,12 @@ import org.springframework.stereotype.Service
 @Service
 class NewsService(private val repository: NewsRepository) {
 
-    fun findAllNews(): List<News> = repository.findAll().toList()
+    fun findAllNews(newsletterId: Long?): List<News> {
+        println(newsletterId)
+        val newsIterable =  if (newsletterId == null) repository.findAll()
+            else repository.findAllByNewsletterId(newsletterId)
+        return newsIterable.toList()
+    }
 
     fun findNewsById(id: Long): News? =
         repository.findById(id).orElse(null)

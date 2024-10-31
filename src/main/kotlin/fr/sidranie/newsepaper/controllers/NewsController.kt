@@ -3,6 +3,7 @@ package fr.sidranie.newsepaper.controllers
 import fr.sidranie.newsepaper.entities.News
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.NewsService
+import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,8 +20,8 @@ import java.net.URI
 class NewsController(private val service: NewsService) {
 
     @GetMapping
-    fun getAllNews(): ResponseEntity<List<News>> =
-        ResponseEntity.ok(service.findAllNews())
+    fun getAllNews(@PathParam("newsletterId") newsletterId: Long?): ResponseEntity<List<News>> =
+        ResponseEntity.ok(service.findAllNews(newsletterId))
 
     @GetMapping("/{id}")
     fun getNewsById(@PathVariable("id") id: Long): ResponseEntity<News> {
