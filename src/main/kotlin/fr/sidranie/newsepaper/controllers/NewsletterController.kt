@@ -21,7 +21,7 @@ class NewsletterController(private val service: NewsletterService,
     private val personService: PersonService) {
 
     @GetMapping
-    fun getAllNewsletters(): ResponseEntity<Iterable<Newsletter>> =
+    fun getAllNewsletters(): ResponseEntity<List<Newsletter>> =
         ResponseEntity.ok(service.findAllNewsletters())
 
     @GetMapping("/{id}")
@@ -31,7 +31,7 @@ class NewsletterController(private val service: NewsletterService,
         return if (newsletter != null)
             ResponseEntity.ok(newsletter)
         else
-            ResponseEntity.notFound().build<Newsletter>()
+            ResponseEntity.notFound().build()
     }
 
     @PostMapping
