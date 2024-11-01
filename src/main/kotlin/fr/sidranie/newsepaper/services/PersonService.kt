@@ -1,5 +1,8 @@
 package fr.sidranie.newsepaper.services
 
+import fr.sidranie.newsepaper.dtos.person.CreatePersonDto
+import fr.sidranie.newsepaper.dtos.person.UpdatePersonDto
+import fr.sidranie.newsepaper.dtos.person.fromCreatePersonDto
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.repositories.PersonRepository
@@ -16,33 +19,35 @@ class PersonService(private val repository: PersonRepository) {
 
     fun findPersonById(id: Long): Person? = repository.findById(id).orElse(null)
     
-    fun createPerson(person: Person) {
-        repository.save<Person>(person)
+    fun createPerson(toCreate: CreatePersonDto): Person {
+        val person = Person.fromCreatePersonDto(toCreate)
+        return repository.save<Person>(person)
     }
 
     fun deletePersonById(id: Long) = repository.deleteById(id)
 
-    fun patchPerson(id: Long, updates: Person): Person {
+    fun patchPerson(id: Long, updates: UpdatePersonDto): Person {
         val person = findPersonById(id) ?: throw NotFoundException()
+        person.applyUpdates(updates)
+        repository.save(person)
+        return person
+    }
 
+    private fun Person.applyUpdates(updates: UpdatePersonDto) {
         if (updates.identifier != null) {
-            person.identifier = updates.identifier
+            identifier = updates.identifier
         }
         if (updates.email != null) {
-            person.email = updates.email
-        }
-        if (updates.password != null) {
-            person.password = updates.password
+            email = updates.email
         }
         if (updates.givenName != null) {
-            person.givenName = updates.givenName
+            givenName = updates.givenName
         }
         if (updates.familyName != null) {
-            person.familyName = updates.familyName
+            familyName = updates.familyName
         }
-
-        repository.save(person)
-
-        return person
+        if (updates.isPublisher != null) {
+            isPublisher = updates.isPublisher
+        }
     }
 }

@@ -1,5 +1,7 @@
 package fr.sidranie.newsepaper.controllers
 
+import fr.sidranie.newsepaper.dtos.person.CreatePersonDto
+import fr.sidranie.newsepaper.dtos.person.UpdatePersonDto
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.PersonService
@@ -34,9 +36,8 @@ class PersonController(private val service: PersonService) {
     }
 
     @PostMapping
-    fun createPerson(@RequestBody toCreate: Person): ResponseEntity<Person> {
-        val person = toCreate.copy(id=null)
-        service.createPerson(person)
+    fun createPerson(@RequestBody toCreate: CreatePersonDto): ResponseEntity<Person> {
+        val person = service.createPerson(toCreate)
         return ResponseEntity.created(URI("/people/${person.id}")).body(person)
     }
 
@@ -47,12 +48,12 @@ class PersonController(private val service: PersonService) {
     }
 
     @PatchMapping("/{id}")
-    fun updatePerson(@PathVariable("id") id: Long, @RequestBody updates: Person): ResponseEntity<Person> {
+    fun updatePerson(@PathVariable("id") id: Long, @RequestBody updates: UpdatePersonDto): ResponseEntity<Person> {
         try {
             val person = service.patchPerson(id, updates)
             return ResponseEntity.ok(person)
         } catch (_: NotFoundException) {
-            return ResponseEntity.notFound().build<Person>()
+            return ResponseEntity.notFound().build()
         }
     }
 }
