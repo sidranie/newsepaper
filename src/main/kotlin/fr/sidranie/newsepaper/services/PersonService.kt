@@ -8,14 +8,10 @@ import org.springframework.stereotype.Service
 @Service
 class PersonService(private val repository: PersonRepository) {
 
-    fun findAllPeople(isPublisher: Boolean?): Iterable<Person> {
-        var people = repository.findAll()
-
-        if (isPublisher != null) {
-            people = people.filter { it.isPublisher == isPublisher }
-        }
-
-        return people
+    fun findAllPeople(isPublisher: Boolean?): List<Person> {
+        val peopleIterable =  if (isPublisher == null) repository.findAll()
+        else repository.findAllByIsPublisher(isPublisher)
+        return peopleIterable.toList()
     }
 
     fun findPersonById(id: Long): Person? = repository.findById(id).orElse(null)
@@ -27,10 +23,7 @@ class PersonService(private val repository: PersonRepository) {
     fun deletePersonById(id: Long) = repository.deleteById(id)
 
     fun patchPerson(id: Long, updates: Person): Person {
-        var person = findPersonById(id)
-        if (person == null) {
-            throw NotFoundException()
-        }
+        val person = findPersonById(id) ?: throw NotFoundException()
 
         if (updates.identifier != null) {
             person.identifier = updates.identifier

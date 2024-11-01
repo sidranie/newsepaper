@@ -21,7 +21,7 @@ class PersonController(private val service: PersonService) {
 
     @GetMapping
     fun getAll(@PathParam("isPublisher") isPublisher: Boolean?) =
-        ResponseEntity.ok<Iterable<Person>>(service.findAllPeople(isPublisher))
+        ResponseEntity.ok<List<Person>>(service.findAllPeople(isPublisher))
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Long): ResponseEntity<Person> {

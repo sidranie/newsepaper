@@ -18,10 +18,7 @@ class NewsletterService(private val repository: NewsletterRepository) {
     fun deleteNewsletterById(id: Long) = repository.deleteById(id)
 
     fun patchNewsletter(id: Long, updates: Newsletter): Newsletter {
-        var newsletter = findNewsletterById(id)
-        if (newsletter == null) {
-            throw NotFoundException()
-        }
+        val newsletter = findNewsletterById(id) ?: throw NotFoundException()
 
         if (updates.headline != null) {
             newsletter.headline = updates.headline

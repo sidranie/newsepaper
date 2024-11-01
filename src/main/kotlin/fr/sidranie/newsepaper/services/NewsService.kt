@@ -10,7 +10,6 @@ import java.time.Instant
 class NewsService(private val repository: NewsRepository) {
 
     fun findAllNews(newsletterId: Long?): List<News> {
-        println(newsletterId)
         val newsIterable =  if (newsletterId == null) repository.findAll()
             else repository.findAllByNewsletterId(newsletterId)
         return newsIterable.toList()
