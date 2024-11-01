@@ -10,5 +10,5 @@ VALUES ('admin', 'admin@newsepaper.fr', 'admin', 'admin', 'admin', 1);
 INSERT INTO newsletter(headline, abstract, publisher_id)
 VALUES ('The second newsletter', 'The newsletter of the second person', 2);
 
-INSERT INTO news (headline, news_body, newsletter_id)
-VALUES ('Hello', 'This is the first news', 1);
+INSERT INTO news (headline, news_body, newsletter_id, created_at)
+VALUES ('Hello', 'This is the first news', 1, '2024-11-01T20:00:00');

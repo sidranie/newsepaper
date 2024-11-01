@@ -8,6 +8,7 @@ import jakarta.persistence.Id
 import jakarta.persistence.JoinColumn
 import jakarta.persistence.ManyToOne
 import jakarta.persistence.Table
+import java.time.Instant
 
 @Entity
 @Table(name = "news")
@@ -20,6 +21,10 @@ data class News(
     var headline: String?,
     @Column(nullable = false)
     var newsBody: String?,
+    @Column(nullable = false)
+    var createdAt: Instant?,
+    @Column
+    var updatedAt: Instant?,
     @ManyToOne(optional = false)
     @JoinColumn(name = "newsletter_id")
     var newsletter: Newsletter?,

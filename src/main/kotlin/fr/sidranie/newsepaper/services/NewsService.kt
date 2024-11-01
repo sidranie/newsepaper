@@ -4,6 +4,7 @@ import fr.sidranie.newsepaper.entities.News
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.repositories.NewsRepository
 import org.springframework.stereotype.Service
+import java.time.Instant
 
 @Service
 class NewsService(private val repository: NewsRepository) {
@@ -19,16 +20,15 @@ class NewsService(private val repository: NewsRepository) {
         repository.findById(id).orElse(null)
 
     fun createNews(news: News) {
+        news.createdAt = Instant.now()
+        news.updatedAt = null
         repository.save<News>(news)
     }
 
     fun deleteNews(id: Long) = repository.deleteById(id)
 
     fun patchNews(id: Long, updates: News): News {
-        var news = findNewsById(id)
-        if (news == null) {
-            throw NotFoundException()
-        }
+        val news = findNewsById(id) ?: throw NotFoundException()
 
         if (updates.headline != null) {
             news.headline = updates.headline
@@ -37,6 +37,7 @@ class NewsService(private val repository: NewsRepository) {
             news.newsBody = updates.newsBody
         }
 
+        news.updatedAt = Instant.now()
         repository.save(news)
 
         return news
