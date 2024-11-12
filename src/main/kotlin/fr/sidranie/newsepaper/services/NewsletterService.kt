@@ -1,6 +1,8 @@
 package fr.sidranie.newsepaper.services
 
 import fr.sidranie.newsepaper.dtos.newsletter.CreateNewsletterDto
+import fr.sidranie.newsepaper.dtos.newsletter.UpdateNewsletterDto
+import fr.sidranie.newsepaper.dtos.person.UpdatePersonDto
 import fr.sidranie.newsepaper.entities.Newsletter
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
@@ -34,7 +36,7 @@ class NewsletterService(private val repository: NewsletterRepository, private va
 
     fun deleteNewsletterById(id: Long) = repository.deleteById(id)
 
-    fun patchNewsletter(id: Long, updates: Newsletter): Newsletter {
+    fun patchNewsletter(id: Long, updates: UpdateNewsletterDto): Newsletter {
         val newsletter = findNewsletterById(id) ?: throw NotFoundException()
 
         if (updates.headline != null) {
@@ -42,6 +44,14 @@ class NewsletterService(private val repository: NewsletterRepository, private va
         }
         if (updates.abstract != null) {
             newsletter.abstract = updates.abstract
+        }
+        if (updates.publisherId != null) {
+            val publisher = personService.findPersonById(updates.publisherId)
+            if (publisher == null) {
+                throw NotFoundException()
+            } else {
+                newsletter.publisher = publisher
+            }
         }
 
         repository.save(newsletter)
