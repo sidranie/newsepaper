@@ -1,5 +1,6 @@
 package fr.sidranie.newsepaper.controllers
 
+import fr.sidranie.newsepaper.dtos.newsletter.CreateNewsletterDto
 import fr.sidranie.newsepaper.entities.Newsletter
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.NewsletterService
@@ -17,8 +18,10 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/newsletters")
-class NewsletterController(private val service: NewsletterService,
-    private val personService: PersonService) {
+class NewsletterController(
+    private val service: NewsletterService,
+    private val personService: PersonService
+) {
 
     @GetMapping
     fun getAllNewsletters(): ResponseEntity<List<Newsletter>> =
@@ -35,13 +38,15 @@ class NewsletterController(private val service: NewsletterService,
     }
 
     @PostMapping
-    fun createNewsletter(@RequestBody toCreate: Newsletter): ResponseEntity<Newsletter> {
-        val newsletter = toCreate.copy(
-            id=null,
-            publisher = personService.findPersonById(1L)!!,
-        )
-        service.createNewsletter(newsletter)
-        return ResponseEntity.created(URI("/newsletter/${newsletter.id}")).body(newsletter)
+    fun createNewsletter(@RequestBody toCreate: CreateNewsletterDto): ResponseEntity<Newsletter> {
+        var newsletter: Newsletter? = null
+        try {
+            newsletter = service.createNewsletter(toCreate)
+        } catch (_: IllegalStateException) {
+            return ResponseEntity.notFound().build()
+        }
+
+        return ResponseEntity.created(URI("/newsletters/${newsletter.id}")).body(newsletter)
     }
 
     @DeleteMapping("/{id}")
