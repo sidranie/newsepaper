@@ -1,5 +1,6 @@
 package fr.sidranie.newsepaper.controllers
 
+import fr.sidranie.newsepaper.dtos.news.CreateNewsDto
 import fr.sidranie.newsepaper.entities.News
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.NewsService
@@ -34,9 +35,14 @@ class NewsController(private val service: NewsService) {
     }
 
     @PostMapping
-    fun createNews(@RequestBody toCreate: News): ResponseEntity<News> {
-        val news = toCreate.copy(id = null)
-        service.createNews(news)
+    fun createNews(@RequestBody toCreate: CreateNewsDto): ResponseEntity<News> {
+        var news: News? = null
+        try {
+            news = service.createNews(toCreate)
+        } catch (_: NotFoundException) {
+            return ResponseEntity.badRequest().build()
+        }
+
         return ResponseEntity.created(URI("/news/${news.id}")).body(news)
     }
 
