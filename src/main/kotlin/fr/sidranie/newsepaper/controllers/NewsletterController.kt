@@ -1,8 +1,7 @@
 package fr.sidranie.newsepaper.controllers
 
-import fr.sidranie.newsepaper.dtos.newsletter.CreateNewsletterDto
-import fr.sidranie.newsepaper.dtos.newsletter.UpdateNewsletterDto
-import fr.sidranie.newsepaper.dtos.person.UpdatePersonDto
+import fr.sidranie.newsepaper.dtos.newsletter.RequestCreateNewsletterDto
+import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
 import fr.sidranie.newsepaper.entities.Newsletter
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.NewsletterService
@@ -40,7 +39,7 @@ class NewsletterController(
     }
 
     @PostMapping
-    fun createNewsletter(@RequestBody toCreate: CreateNewsletterDto): ResponseEntity<Newsletter> {
+    fun createNewsletter(@RequestBody toCreate: RequestCreateNewsletterDto): ResponseEntity<Newsletter> {
         var newsletter: Newsletter? = null
         try {
             newsletter = service.createNewsletter(toCreate)
@@ -58,7 +57,7 @@ class NewsletterController(
     }
 
     @PatchMapping("/{id}")
-    fun patchNewsletter(@PathVariable("id") id: Long, @RequestBody updates: UpdateNewsletterDto): ResponseEntity<Newsletter> {
+    fun patchNewsletter(@PathVariable("id") id: Long, @RequestBody updates: RequestUpdateNewsletterDto): ResponseEntity<Newsletter> {
         try {
             val newsletter = service.patchNewsletter(id, updates)
             return ResponseEntity.ok(newsletter)

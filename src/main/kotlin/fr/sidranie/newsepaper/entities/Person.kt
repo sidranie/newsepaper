@@ -26,6 +26,4 @@ data class Person(
     var familyName: String?,
     @Column(nullable = false)
     var isPublisher: Boolean? = false
-) {
-    companion object
-}
+)

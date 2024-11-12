@@ -1,10 +1,9 @@
 package fr.sidranie.newsepaper.services
 
-import fr.sidranie.newsepaper.dtos.news.CreateNewsDto
+import fr.sidranie.newsepaper.dtos.news.RequestCreateNewsDto
 import fr.sidranie.newsepaper.entities.News
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.repositories.NewsRepository
-import fr.sidranie.newsepaper.repositories.NewsletterRepository
 import org.springframework.stereotype.Service
 import java.time.Instant
 
@@ -23,7 +22,7 @@ class NewsService(
     fun findNewsById(id: Long): News? =
         repository.findById(id).orElse(null)
 
-    fun createNews(toCreate: CreateNewsDto): News {
+    fun createNews(toCreate: RequestCreateNewsDto): News {
         val newsletter = newsletterService.findNewsletterById(toCreate.newsletterId)
         if (newsletter == null) {
             throw NotFoundException()
@@ -37,8 +36,8 @@ class NewsService(
             createdAt = Instant.now(),
             updatedAt = null,
         )
-        repository.save<News>(news)
-        return news
+
+        return repository.save<News>(news)
     }
 
     fun deleteNews(id: Long) = repository.deleteById(id)
@@ -54,8 +53,7 @@ class NewsService(
         }
 
         news.updatedAt = Instant.now()
-        repository.save(news)
 
-        return news
+        return repository.save(news)
     }
 }

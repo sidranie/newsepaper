@@ -1,10 +1,8 @@
 package fr.sidranie.newsepaper.services
 
-import fr.sidranie.newsepaper.dtos.newsletter.CreateNewsletterDto
-import fr.sidranie.newsepaper.dtos.newsletter.UpdateNewsletterDto
-import fr.sidranie.newsepaper.dtos.person.UpdatePersonDto
+import fr.sidranie.newsepaper.dtos.newsletter.RequestCreateNewsletterDto
+import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
 import fr.sidranie.newsepaper.entities.Newsletter
-import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.repositories.NewsletterRepository
 import org.springframework.stereotype.Service
@@ -15,7 +13,7 @@ class NewsletterService(private val repository: NewsletterRepository, private va
 
     fun findNewsletterById(id: Long): Newsletter? = repository.findById(id).orElse(null)
 
-    fun createNewsletter(toCreate: CreateNewsletterDto): Newsletter {
+    fun createNewsletter(toCreate: RequestCreateNewsletterDto): Newsletter {
         val publisher = personService.findPersonById(toCreate.publisherId)
         if (publisher == null) {
             throw IllegalStateException("Publisher not found")
@@ -30,13 +28,13 @@ class NewsletterService(private val repository: NewsletterRepository, private va
             abstract = toCreate.abstract,
             publisher = publisher,
         )
-        repository.save<Newsletter>(newsletter)
-        return newsletter
+
+        return repository.save<Newsletter>(newsletter)
     }
 
     fun deleteNewsletterById(id: Long) = repository.deleteById(id)
 
-    fun patchNewsletter(id: Long, updates: UpdateNewsletterDto): Newsletter {
+    fun patchNewsletter(id: Long, updates: RequestUpdateNewsletterDto): Newsletter {
         val newsletter = findNewsletterById(id) ?: throw NotFoundException()
 
         if (updates.headline != null) {
@@ -54,8 +52,6 @@ class NewsletterService(private val repository: NewsletterRepository, private va
             }
         }
 
-        repository.save(newsletter)
-
-        return newsletter
+        return repository.save(newsletter)
     }
 }
