@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface PersonRepository: CrudRepository<Person, Long> {
     fun findAllByIsPublisher(isPublisher: Boolean): Iterable<Person>
+    fun findBySubscribedNewsletters_Id(newsletterId: Long): List<Person>
 }

@@ -1,11 +1,13 @@
 package fr.sidranie.newsepaper.controllers
 
+import fr.sidranie.newsepaper.dtos.newsletter.NewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestCreateNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
 import fr.sidranie.newsepaper.entities.Newsletter
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.NewsletterService
-import fr.sidranie.newsepaper.services.PersonService
+import fr.sidranie.newsepaper.services.impl.NewsletterServiceImpl
+import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -19,14 +21,11 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/newsletters")
-class NewsletterController(
-    private val service: NewsletterService,
-    private val personService: PersonService
-) {
+class NewsletterController(private val service: NewsletterService) {
 
     @GetMapping
-    fun getAllNewsletters(): ResponseEntity<List<Newsletter>> =
-        ResponseEntity.ok(service.findAllNewsletters())
+    fun getAllNewsletters(@PathParam("withSubscribers") withSubscribers: Boolean?): ResponseEntity<List<NewsletterDto>> =
+        ResponseEntity.ok(service.findAllNewsletters(withSubscribers))
 
     @GetMapping("/{id}")
     fun getNewsletterById(@PathVariable("id") id: Long): ResponseEntity<Newsletter> {

@@ -12,3 +12,6 @@ VALUES ('The second newsletter', 'The newsletter of the second person', 2);
 
 INSERT INTO news (headline, news_body, newsletter_id, created_at)
 VALUES ('Hello', 'This is the first news', 1, '2024-11-01T20:00:00');
+
+INSERT INTO subscriptions (person_id, newsletter_id)
+VALUES (1, 1);
