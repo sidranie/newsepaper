@@ -24,12 +24,11 @@ class PersonServiceImpl(
 
         val mappedPeople = peopleIterable.toList()
             .map {
-                it.subscribedNewsletters = emptyList()
+                it.subscribedNewsletters = emptySet()
                 PersonDto(it)
             }
 
         if (withSubscriptions != null && withSubscriptions) {
-            println("with subscriptions")
             mappedPeople.forEach {
                 val subscriptions = newsletterService.findAllSubscribedNewsletters(it.id!!)
                 it.subscribedNewsletters = subscriptions.map { subscription: Newsletter -> NewsletterDto(subscription) }.toSet()
@@ -50,7 +49,7 @@ class PersonServiceImpl(
             givenName = toCreate.givenName,
             familyName = toCreate.familyName,
             isPublisher = toCreate.isPublisher,
-            subscribedNewsletters = emptyList(),
+            subscribedNewsletters = emptySet(),
         )
         return repository.save<Person>(person)
     }

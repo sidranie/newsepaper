@@ -36,5 +36,5 @@ data class Person(
         joinColumns = [JoinColumn(name =  "person_id")],
         inverseJoinColumns = [JoinColumn(name = "newsletter_id")]
     )
-    var subscribedNewsletters: List<Newsletter>?,
+    var subscribedNewsletters: Set<Newsletter>?,
 )

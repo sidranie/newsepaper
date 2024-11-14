@@ -22,14 +22,14 @@ class NewsletterServiceImpl(
         val newsletters = repository.findAll().toList()
 
         val mappedNewsletters =  newsletters.map {
-            it.subscriptions = emptyList()
+            it.subscriptions = emptySet()
             NewsletterDto(it)
         }
 
         if (withSubscribers != null && withSubscribers) {
             mappedNewsletters.forEach {
                 val subscribers = personService.findSubscribersForNewsletter(it.id!!)
-                it.subscriptions = subscribers.map { subscriber: Person -> PersonDto(subscriber) }
+                it.subscriptions = subscribers.map { subscriber: Person -> PersonDto(subscriber) }.toSet()
             }
         }
 
@@ -52,7 +52,7 @@ class NewsletterServiceImpl(
             headline = toCreate.headline,
             abstract = toCreate.abstract,
             publisher = publisher,
-            subscriptions = emptyList(),
+            subscriptions = emptySet(),
         )
 
         return repository.save<Newsletter>(newsletter)
