@@ -3,7 +3,7 @@ package fr.sidranie.newsepaper.controllers
 import fr.sidranie.newsepaper.dtos.news.RequestCreateNewsDto
 import fr.sidranie.newsepaper.entities.News
 import fr.sidranie.newsepaper.exceptions.NotFoundException
-import fr.sidranie.newsepaper.services.impl.NewsServiceImpl
+import fr.sidranie.newsepaper.services.NewsService
 import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -18,7 +18,7 @@ import java.net.URI
 
 @RestController
 @RequestMapping("/news")
-class NewsController(private val service: NewsServiceImpl) {
+class NewsController(private val service: NewsService) {
 
     @GetMapping
     fun getAllNews(@PathParam("newsletterId") newsletterId: Long?): ResponseEntity<List<News>> =
