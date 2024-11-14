@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface NewsRepository: CrudRepository<News, Long> {
-    fun findAllByNewsletterId(newsletterId: Long): Iterable<News>
+    override fun findAll(): Set<News>
+    fun findAllByNewsletterId(newsletterId: Long): Set<News>
 }

@@ -15,11 +15,8 @@ class NewsServiceImpl(
     private val newsletterService: NewsletterService,
 ): NewsService {
 
-    override fun findAllNews(newsletterId: Long?): List<News> {
-        val newsIterable = if (newsletterId == null) repository.findAll()
-            else repository.findAllByNewsletterId(newsletterId)
-        return newsIterable.toList()
-    }
+    override fun findAllNews(newsletterId: Long?): List<News> = if (newsletterId == null) repository.findAll().toList()
+        else repository.findAllByNewsletterId(newsletterId).toList()
 
     override fun findNewsById(id: Long): News? =
         repository.findById(id).orElse(null)

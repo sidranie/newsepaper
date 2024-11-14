@@ -19,7 +19,7 @@ class NewsletterServiceImpl(
     @Lazy private val personService: PersonService
 ): NewsletterService {
     override fun findAllNewsletters(withSubscribers: Boolean?): List<NewsletterDto> {
-        val newsletters = repository.findAll().toList()
+        val newsletters = repository.findAll()
 
         val mappedNewsletters =  newsletters.map {
             it.subscriptions = emptySet()

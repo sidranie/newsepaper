@@ -19,11 +19,10 @@ class PersonServiceImpl(
 ): PersonService {
 
     override fun findAllPeople(isPublisher: Boolean?, withSubscriptions: Boolean?): List<PersonDto> {
-        val peopleIterable =  if (isPublisher == null) repository.findAll()
+        val people: Set<Person> =  if (isPublisher == null) repository.findAll()
         else repository.findAllByIsPublisher(isPublisher)
 
-        val mappedPeople = peopleIterable.toList()
-            .map {
+        val mappedPeople = people.map {
                 it.subscribedNewsletters = emptySet()
                 PersonDto(it)
             }
