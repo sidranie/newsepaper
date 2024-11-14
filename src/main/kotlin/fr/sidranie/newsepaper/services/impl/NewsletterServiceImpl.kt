@@ -29,7 +29,7 @@ class NewsletterServiceImpl(
         if (withSubscribers != null && withSubscribers) {
             mappedNewsletters.forEach {
                 val subscribers = personService.findSubscribersForNewsletter(it.id!!)
-                subscribers.map { subscriber: Person -> PersonDto(subscriber) }
+                it.subscriptions = subscribers.map { subscriber: Person -> PersonDto(subscriber) }
             }
         }
 

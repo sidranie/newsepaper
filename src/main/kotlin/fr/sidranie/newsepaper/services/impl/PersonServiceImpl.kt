@@ -32,7 +32,7 @@ class PersonServiceImpl(
             println("with subscriptions")
             mappedPeople.forEach {
                 val subscriptions = newsletterService.findAllSubscribedNewsletters(it.id!!)
-                subscriptions.map { subscription: Newsletter -> NewsletterDto(subscription) }
+                it.subscribedNewsletters = subscriptions.map { subscription: Newsletter -> NewsletterDto(subscription) }.toSet()
             }
         }
 

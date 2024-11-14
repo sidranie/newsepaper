@@ -4,11 +4,11 @@ import fr.sidranie.newsepaper.dtos.person.PersonDto
 import fr.sidranie.newsepaper.entities.Newsletter
 
 data class NewsletterDto(
-    val id: Long?,
-    val headline: String?,
-    val abstract: String?,
-    val publisher: PersonDto?,
-    val subscriptions: List<PersonDto>?,
+    var id: Long?,
+    var headline: String?,
+    var abstract: String?,
+    var publisher: PersonDto?,
+    var subscriptions: List<PersonDto>?,
 ) {
     constructor(newsletter: Newsletter) : this(
         id = newsletter.id,
