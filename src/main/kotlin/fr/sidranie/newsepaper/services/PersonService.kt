@@ -13,4 +13,6 @@ interface PersonService {
     fun deletePersonById(id: Long)
     fun patchPerson(id: Long, updates: RequestUpdatePersonDto): Person
     fun findSubscribersForNewsletter(newsletterId: Long): List<Person>
+    fun subscribeToNewsletter(personId: Long, newsletterId: Long)
+    fun unsubscribeToNewsletter(personId: Long, newsletterId: Long)
 }

@@ -1,5 +1,6 @@
 package fr.sidranie.newsepaper.controllers
 
+import fr.sidranie.newsepaper.dtos.ActionResult
 import fr.sidranie.newsepaper.dtos.person.PersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestCreatePersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestUpdatePersonDto
@@ -34,9 +35,9 @@ class PersonController(private val service: PersonService) {
         val user = service.findPersonById(id)
 
         return if (user != null)
-            ResponseEntity.ok<Person>(user)
+            ResponseEntity.ok(user)
         else
-            ResponseEntity.notFound().build<Person>()
+            ResponseEntity.notFound().build()
     }
 
     @PostMapping
@@ -58,6 +59,26 @@ class PersonController(private val service: PersonService) {
             return ResponseEntity.ok(person)
         } catch (_: NotFoundException) {
             return ResponseEntity.notFound().build()
+        }
+    }
+
+    @PostMapping("/{personId}/newsletters/{newsletterId}")
+    fun subscribeToNewsletter(@PathVariable("personId") personId: Long, @PathVariable("newsletterId") newsletterId: Long): ResponseEntity<ActionResult> {
+        try {
+            service.subscribeToNewsletter(personId, newsletterId)
+            return ResponseEntity.ok(ActionResult("Person $personId follows the newsletter $newsletterId"))
+        } catch (_: NotFoundException) {
+            return ResponseEntity.badRequest().body(ActionResult("Person $personId or newsletter $newsletterId not found"))
+        }
+    }
+
+    @DeleteMapping("/{personId}/newsletters/{newsletterId}")
+    fun unsubscribeToNewsletter(@PathVariable("personId") personId: Long, @PathVariable("newsletterId") newsletterId: Long): ResponseEntity<ActionResult> {
+        try {
+            service.unsubscribeToNewsletter(personId, newsletterId)
+            return ResponseEntity.ok(ActionResult("Person $personId does not follow the newsletter $newsletterId"))
+        } catch (_: NotFoundException) {
+            return ResponseEntity.badRequest().body(ActionResult("Person $personId or newsletter $newsletterId not found"))
         }
     }
 }

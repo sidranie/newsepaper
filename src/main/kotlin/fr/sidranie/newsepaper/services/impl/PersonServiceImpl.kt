@@ -63,6 +63,30 @@ class PersonServiceImpl(
 
     override fun findSubscribersForNewsletter(newsletterId: Long): List<Person> = repository.findBySubscribedNewsletters_Id(newsletterId)
 
+    override fun subscribeToNewsletter(personId: Long, newsletterId: Long) {
+        val person: Person = findPersonById(personId) ?: throw NotFoundException()
+
+        // Test if already following the targeted newsletter (skip if true)
+        if (person.subscribedNewsletters.find { it.id == newsletterId } == null) {
+            val newsletter: Newsletter = newsletterService.findNewsletterById(newsletterId) ?: throw NotFoundException()
+            person.subscribedNewsletters.plus(newsletter)
+        }
+
+        return
+    }
+
+    override fun unsubscribeToNewsletter(personId: Long, newsletterId: Long) {
+        val person: Person = findPersonById(personId) ?: throw NotFoundException()
+
+        // Test if not following the targeted newsletter (skip if not following)
+        if (person.subscribedNewsletters.find { it.id == newsletterId } != null) {
+            val newsletter: Newsletter = newsletterService.findNewsletterById(newsletterId) ?: throw NotFoundException()
+            person.subscribedNewsletters.minus(newsletter)
+        }
+
+        return
+    }
+
     private fun Person.applyUpdates(updates: RequestUpdatePersonDto) {
         if (updates.identifier != null) {
             identifier = updates.identifier

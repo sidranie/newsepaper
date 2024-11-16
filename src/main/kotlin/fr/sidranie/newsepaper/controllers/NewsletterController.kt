@@ -1,5 +1,6 @@
 package fr.sidranie.newsepaper.controllers
 
+import fr.sidranie.newsepaper.dtos.ActionResult
 import fr.sidranie.newsepaper.dtos.newsletter.NewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestCreateNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
@@ -64,5 +65,4 @@ class NewsletterController(private val service: NewsletterService) {
             return ResponseEntity.notFound().build()
         }
     }
-
 }
