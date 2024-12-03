@@ -25,6 +25,4 @@ data class Newsletter(
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     var publisher: Person,
-    @ManyToMany(fetch = FetchType.LAZY, mappedBy = "subscribedNewsletters")
-    var subscriptions: Set<Person>?,
 )

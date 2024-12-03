@@ -61,8 +61,6 @@ class PersonServiceImpl(
         return repository.save(person)
     }
 
-    override fun findSubscribersForNewsletter(newsletterId: Long): List<Person> = repository.findBySubscribedNewsletters_Id(newsletterId)
-
     override fun subscribeToNewsletter(personId: Long, newsletterId: Long) {
         val person: Person = findPersonById(personId) ?: throw NotFoundException()
 

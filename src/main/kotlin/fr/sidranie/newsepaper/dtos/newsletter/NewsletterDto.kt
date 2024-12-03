@@ -8,13 +8,11 @@ data class NewsletterDto(
     var headline: String?,
     var abstract: String?,
     var publisher: PersonDto?,
-    var subscriptions: Set<PersonDto>?,
 ) {
     constructor(newsletter: Newsletter) : this(
         id = newsletter.id,
         headline = newsletter.headline,
         abstract = newsletter.abstract,
         publisher = PersonDto(newsletter.publisher),
-        subscriptions = newsletter.subscriptions?.map { PersonDto(it) }?.toSet(),
     )
 }

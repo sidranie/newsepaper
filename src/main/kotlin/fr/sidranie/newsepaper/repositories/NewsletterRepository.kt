@@ -7,5 +7,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface NewsletterRepository: CrudRepository<Newsletter, Long> {
     override fun findAll(): Set<Newsletter>
-    fun findBySubscriptions_Id(subscriptionId: Long): List<Newsletter>
 }

@@ -25,8 +25,8 @@ import java.net.URI
 class NewsletterController(private val service: NewsletterService) {
 
     @GetMapping
-    fun getAllNewsletters(@PathParam("withSubscribers") withSubscribers: Boolean?): ResponseEntity<List<NewsletterDto>> =
-        ResponseEntity.ok(service.findAllNewsletters(withSubscribers))
+    fun getAllNewsletters(): ResponseEntity<List<NewsletterDto>> =
+        ResponseEntity.ok(service.findAllNewsletters())
 
     @GetMapping("/{id}")
     fun getNewsletterById(@PathVariable("id") id: Long): ResponseEntity<Newsletter> {

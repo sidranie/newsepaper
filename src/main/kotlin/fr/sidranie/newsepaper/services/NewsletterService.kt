@@ -6,7 +6,7 @@ import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
 import fr.sidranie.newsepaper.entities.Newsletter
 
 interface NewsletterService {
-    fun findAllNewsletters(withSubscribers: Boolean?): List<NewsletterDto>
+    fun findAllNewsletters(): List<NewsletterDto>
     fun findNewsletterById(id: Long): Newsletter?
     fun createNewsletter(toCreate: RequestCreateNewsletterDto): Newsletter
     fun deleteNewsletterById(id: Long)

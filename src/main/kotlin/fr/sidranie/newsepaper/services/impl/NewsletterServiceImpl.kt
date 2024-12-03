@@ -18,23 +18,7 @@ class NewsletterServiceImpl(
     private val repository: NewsletterRepository,
     @Lazy private val personService: PersonService
 ): NewsletterService {
-    override fun findAllNewsletters(withSubscribers: Boolean?): List<NewsletterDto> {
-        val newsletters = repository.findAll()
-
-        val mappedNewsletters =  newsletters.map {
-            it.subscriptions = emptySet()
-            NewsletterDto(it)
-        }
-
-        if (withSubscribers != null && withSubscribers) {
-            mappedNewsletters.forEach {
-                val subscribers = personService.findSubscribersForNewsletter(it.id!!)
-                it.subscriptions = subscribers.map { subscriber: Person -> PersonDto(subscriber) }.toSet()
-            }
-        }
-
-        return mappedNewsletters
-    }
+    override fun findAllNewsletters(): List<NewsletterDto> = repository.findAll().map {NewsletterDto(it)}
 
     override fun findNewsletterById(id: Long): Newsletter? = repository.findById(id).orElse(null)
 
@@ -52,7 +36,6 @@ class NewsletterServiceImpl(
             headline = toCreate.headline,
             abstract = toCreate.abstract,
             publisher = publisher,
-            subscriptions = emptySet(),
         )
 
         return repository.save<Newsletter>(newsletter)
