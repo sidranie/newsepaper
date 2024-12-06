@@ -21,6 +21,16 @@ class NewsletterServiceImpl(
 
     override fun findNewsletterById(id: Long): Newsletter? = repository.findById(id).orElse(null)
 
+    override fun findShortNewsletterDtoById(id: Long): ShortNewsletterDto? {
+        val newsletter = findNewsletterById(id)
+        return if (newsletter != null) ShortNewsletterDto(newsletter) else null
+    }
+
+    override fun findFullNewsletterDtoById(id: Long): FullNewsletterDto? {
+        val newsletter = findNewsletterById(id)
+        return if (newsletter != null) FullNewsletterDto(newsletter) else null
+    }
+
     override fun createNewsletter(toCreate: RequestCreateNewsletterDto): Newsletter {
         val publisher = personService.findPersonById(toCreate.publisherId)
         if (publisher == null) {

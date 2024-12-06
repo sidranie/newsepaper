@@ -1,5 +1,6 @@
 package fr.sidranie.newsepaper.services.impl
 
+import fr.sidranie.newsepaper.dtos.person.FullPersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestCreatePersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestUpdatePersonDto
 import fr.sidranie.newsepaper.dtos.person.ShortPersonDto
@@ -24,7 +25,17 @@ class PersonServiceImpl(private val repository: PersonRepository): PersonService
     }
 
     override fun findPersonById(id: Long): Person? = repository.findById(id).orElse(null)
-    
+
+    override fun findShortPersonDtoById(id: Long): ShortPersonDto? {
+        val person = findPersonById(id)
+        return if (person != null) ShortPersonDto(person) else null
+    }
+
+    override fun findFullPersonDtoById(id: Long): FullPersonDto? {
+        val person = findPersonById(id)
+        return if (person != null) FullPersonDto(person) else null
+    }
+
     override fun createPerson(toCreate: RequestCreatePersonDto): Person {
         val person = Person(
             id = null,
