@@ -1,6 +1,6 @@
 package fr.sidranie.newsepaper.dtos.person
 
-import fr.sidranie.newsepaper.dtos.newsletter.NewsletterDto
+import fr.sidranie.newsepaper.dtos.newsletter.ShortNewsletterDto
 import fr.sidranie.newsepaper.entities.Person
 
 data class FullPersonDto(
@@ -11,7 +11,7 @@ data class FullPersonDto(
     var givenName: String?,
     var familyName: String?,
     var isPublisher: Boolean?,
-    var subscribedNewsletters: Set<NewsletterDto>? = null,
+    var subscribedNewsletters: Set<ShortNewsletterDto>? = null,
 ) {
     constructor(person: Person) : this(
         id = person.id,
@@ -21,6 +21,6 @@ data class FullPersonDto(
         givenName = person.givenName,
         familyName = person.familyName,
         isPublisher = person.isPublisher,
-        subscribedNewsletters = person.subscribedNewsletters?.map { NewsletterDto(it) }?.toSet(),
+        subscribedNewsletters = person.subscribedNewsletters?.map { ShortNewsletterDto(it) }?.toSet(),
     )
 }

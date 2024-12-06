@@ -1,8 +1,9 @@
 package fr.sidranie.newsepaper.services.impl
 
-import fr.sidranie.newsepaper.dtos.newsletter.NewsletterDto
+import fr.sidranie.newsepaper.dtos.newsletter.FullNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestCreateNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
+import fr.sidranie.newsepaper.dtos.newsletter.ShortNewsletterDto
 import fr.sidranie.newsepaper.entities.Newsletter
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.repositories.NewsletterRepository
@@ -16,7 +17,7 @@ class NewsletterServiceImpl(
     private val repository: NewsletterRepository,
     @Lazy private val personService: PersonService
 ): NewsletterService {
-    override fun findAllNewsletters(): List<NewsletterDto> = repository.findAll().map {NewsletterDto(it)}
+    override fun findAllNewsletters(): List<ShortNewsletterDto> = repository.findAll().map { ShortNewsletterDto(it)}
 
     override fun findNewsletterById(id: Long): Newsletter? = repository.findById(id).orElse(null)
 
