@@ -9,14 +9,7 @@ import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.PersonService
 import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.net.URI
 
 @RestController
@@ -28,8 +21,8 @@ class PersonController(private val service: PersonService) {
         ResponseEntity.ok<List<ShortPersonDto>>(service.findAllPeople(isPublisher))
 
     @GetMapping("/{id}")
-    fun getById(@PathVariable("id") id: Long): ResponseEntity<Person> {
-        val user = service.findPersonById(id)
+    fun getById(@PathVariable("id") id: Long): ResponseEntity<FullPersonDto> {
+        val user = service.findFullPersonDtoById(id)
 
         return if (user != null)
             ResponseEntity.ok(user)

@@ -1,5 +1,6 @@
 package fr.sidranie.newsepaper.controllers
 
+import fr.sidranie.newsepaper.dtos.newsletter.FullNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestCreateNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.ShortNewsletterDto
@@ -19,8 +20,8 @@ class NewsletterController(private val service: NewsletterService) {
         ResponseEntity.ok(service.findAllNewsletters())
 
     @GetMapping("/{id}")
-    fun getNewsletterById(@PathVariable("id") id: Long): ResponseEntity<Newsletter> {
-        val newsletter = service.findNewsletterById(id)
+    fun getNewsletterById(@PathVariable("id") id: Long): ResponseEntity<FullNewsletterDto> {
+        val newsletter = service.findFullNewsletterDtoById(id)
 
         return if (newsletter != null)
             ResponseEntity.ok(newsletter)
