@@ -1,13 +1,12 @@
 package fr.sidranie.newsepaper.controllers
 
-import fr.sidranie.newsepaper.dtos.ActionResult
-import fr.sidranie.newsepaper.dtos.person.PersonDto
+import fr.sidranie.newsepaper.dtos.person.FullPersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestCreatePersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestUpdatePersonDto
+import fr.sidranie.newsepaper.dtos.person.ShortPersonDto
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.PersonService
-import fr.sidranie.newsepaper.services.impl.PersonServiceImpl
 import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
@@ -25,10 +24,8 @@ import java.net.URI
 class PersonController(private val service: PersonService) {
 
     @GetMapping
-    fun getAll(
-        @PathParam("isPublisher") isPublisher: Boolean?,
-        @PathParam("withSubscriptions") withSubscriptions: Boolean?
-    ) = ResponseEntity.ok<List<PersonDto>>(service.findAllPeople(isPublisher, withSubscriptions))
+    fun getAll(@PathParam("isPublisher") isPublisher: Boolean?) =
+        ResponseEntity.ok<List<ShortPersonDto>>(service.findAllPeople(isPublisher))
 
     @GetMapping("/{id}")
     fun getById(@PathVariable("id") id: Long): ResponseEntity<Person> {
@@ -59,26 +56,6 @@ class PersonController(private val service: PersonService) {
             return ResponseEntity.ok(person)
         } catch (_: NotFoundException) {
             return ResponseEntity.notFound().build()
-        }
-    }
-
-    @PostMapping("/{personId}/newsletters/{newsletterId}")
-    fun subscribeToNewsletter(@PathVariable("personId") personId: Long, @PathVariable("newsletterId") newsletterId: Long): ResponseEntity<ActionResult> {
-        try {
-            service.subscribeToNewsletter(personId, newsletterId)
-            return ResponseEntity.ok(ActionResult("Person $personId follows the newsletter $newsletterId"))
-        } catch (_: NotFoundException) {
-            return ResponseEntity.badRequest().body(ActionResult("Person $personId or newsletter $newsletterId not found"))
-        }
-    }
-
-    @DeleteMapping("/{personId}/newsletters/{newsletterId}")
-    fun unsubscribeToNewsletter(@PathVariable("personId") personId: Long, @PathVariable("newsletterId") newsletterId: Long): ResponseEntity<ActionResult> {
-        try {
-            service.unsubscribeToNewsletter(personId, newsletterId)
-            return ResponseEntity.ok(ActionResult("Person $personId does not follow the newsletter $newsletterId"))
-        } catch (_: NotFoundException) {
-            return ResponseEntity.badRequest().body(ActionResult("Person $personId or newsletter $newsletterId not found"))
         }
     }
 }

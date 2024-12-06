@@ -11,5 +11,4 @@ interface NewsletterService {
     fun createNewsletter(toCreate: RequestCreateNewsletterDto): Newsletter
     fun deleteNewsletterById(id: Long)
     fun patchNewsletter(id: Long, updates: RequestUpdateNewsletterDto): Newsletter
-    fun findAllSubscribedNewsletters(personId: Long): List<Newsletter>
 }

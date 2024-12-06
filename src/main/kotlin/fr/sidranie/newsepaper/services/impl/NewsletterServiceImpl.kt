@@ -3,9 +3,7 @@ package fr.sidranie.newsepaper.services.impl
 import fr.sidranie.newsepaper.dtos.newsletter.NewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestCreateNewsletterDto
 import fr.sidranie.newsepaper.dtos.newsletter.RequestUpdateNewsletterDto
-import fr.sidranie.newsepaper.dtos.person.PersonDto
 import fr.sidranie.newsepaper.entities.Newsletter
-import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.repositories.NewsletterRepository
 import fr.sidranie.newsepaper.services.NewsletterService
@@ -36,6 +34,7 @@ class NewsletterServiceImpl(
             headline = toCreate.headline,
             abstract = toCreate.abstract,
             publisher = publisher,
+            followers = TODO(),
         )
 
         return repository.save<Newsletter>(newsletter)
@@ -63,6 +62,4 @@ class NewsletterServiceImpl(
 
         return repository.save(newsletter)
     }
-
-    override fun findAllSubscribedNewsletters(personId: Long): List<Newsletter> = repository.findBySubscriptions_Id(personId)
 }

@@ -1,38 +1,24 @@
 package fr.sidranie.newsepaper.services.impl
 
-import fr.sidranie.newsepaper.dtos.newsletter.NewsletterDto
-import fr.sidranie.newsepaper.dtos.person.PersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestCreatePersonDto
 import fr.sidranie.newsepaper.dtos.person.RequestUpdatePersonDto
-import fr.sidranie.newsepaper.entities.Newsletter
+import fr.sidranie.newsepaper.dtos.person.ShortPersonDto
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.repositories.PersonRepository
-import fr.sidranie.newsepaper.services.NewsletterService
 import fr.sidranie.newsepaper.services.PersonService
 import org.springframework.stereotype.Service
 
 @Service
-class PersonServiceImpl(
-    private val repository: PersonRepository,
-    private val newsletterService: NewsletterService,
-): PersonService {
+class PersonServiceImpl(private val repository: PersonRepository): PersonService {
 
-    override fun findAllPeople(isPublisher: Boolean?, withSubscriptions: Boolean?): List<PersonDto> {
+    override fun findAllPeople(isPublisher: Boolean?): List<ShortPersonDto> {
         val people: Set<Person> =  if (isPublisher == null) repository.findAll()
         else repository.findAllByIsPublisher(isPublisher)
 
         val mappedPeople = people.map {
-                it.subscribedNewsletters = emptySet()
-                PersonDto(it)
+                ShortPersonDto(it)
             }
-
-        if (withSubscriptions != null && withSubscriptions) {
-            mappedPeople.forEach {
-                val subscriptions = newsletterService.findAllSubscribedNewsletters(it.id!!)
-                it.subscribedNewsletters = subscriptions.map { subscription: Newsletter -> NewsletterDto(subscription) }.toSet()
-            }
-        }
 
         return mappedPeople
     }
@@ -59,30 +45,6 @@ class PersonServiceImpl(
         val person = findPersonById(id) ?: throw NotFoundException()
         person.applyUpdates(updates)
         return repository.save(person)
-    }
-
-    override fun subscribeToNewsletter(personId: Long, newsletterId: Long) {
-        val person: Person = findPersonById(personId) ?: throw NotFoundException()
-
-        // Test if already following the targeted newsletter (skip if true)
-        if (person.subscribedNewsletters.find { it.id == newsletterId } == null) {
-            val newsletter: Newsletter = newsletterService.findNewsletterById(newsletterId) ?: throw NotFoundException()
-            person.subscribedNewsletters.plus(newsletter)
-        }
-
-        return
-    }
-
-    override fun unsubscribeToNewsletter(personId: Long, newsletterId: Long) {
-        val person: Person = findPersonById(personId) ?: throw NotFoundException()
-
-        // Test if not following the targeted newsletter (skip if not following)
-        if (person.subscribedNewsletters.find { it.id == newsletterId } != null) {
-            val newsletter: Newsletter = newsletterService.findNewsletterById(newsletterId) ?: throw NotFoundException()
-            person.subscribedNewsletters.minus(newsletter)
-        }
-
-        return
     }
 
     private fun Person.applyUpdates(updates: RequestUpdatePersonDto) {

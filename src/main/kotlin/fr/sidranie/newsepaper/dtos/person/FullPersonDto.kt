@@ -3,7 +3,7 @@ package fr.sidranie.newsepaper.dtos.person
 import fr.sidranie.newsepaper.dtos.newsletter.NewsletterDto
 import fr.sidranie.newsepaper.entities.Person
 
-data class PersonDto(
+data class FullPersonDto(
     var id: Long?,
     var identifier: String?,
     var email: String?,

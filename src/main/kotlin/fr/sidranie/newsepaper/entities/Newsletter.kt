@@ -25,4 +25,6 @@ data class Newsletter(
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     var publisher: Person,
+    @ManyToMany(mappedBy = "subscribedNewsletters")
+    var followers: Set<Person>,
 )
