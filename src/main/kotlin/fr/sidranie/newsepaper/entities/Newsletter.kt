@@ -1,15 +1,6 @@
 package fr.sidranie.newsepaper.entities
 
-import jakarta.persistence.Column
-import jakarta.persistence.Entity
-import jakarta.persistence.FetchType
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
-import jakarta.persistence.JoinColumn
-import jakarta.persistence.ManyToMany
-import jakarta.persistence.ManyToOne
-import jakarta.persistence.Table
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "newsletter")
@@ -25,6 +16,6 @@ data class Newsletter(
     @ManyToOne
     @JoinColumn(name = "publisher_id")
     var publisher: Person,
-    @ManyToMany(mappedBy = "subscribedNewsletters")
-    var followers: Set<Person>,
+    @OneToMany(fetch = FetchType.LAZY)
+    var subscriptions: Set<Subscription> = emptySet(),
 )

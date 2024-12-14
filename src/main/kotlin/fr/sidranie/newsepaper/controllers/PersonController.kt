@@ -7,6 +7,7 @@ import fr.sidranie.newsepaper.dtos.person.ShortPersonDto
 import fr.sidranie.newsepaper.entities.Person
 import fr.sidranie.newsepaper.exceptions.NotFoundException
 import fr.sidranie.newsepaper.services.PersonService
+import jakarta.transaction.Transactional
 import jakarta.websocket.server.PathParam
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -21,8 +22,11 @@ class PersonController(private val service: PersonService) {
         ResponseEntity.ok<List<ShortPersonDto>>(service.findAllPeople(isPublisher))
 
     @GetMapping("/{id}")
+    @Transactional
     fun getById(@PathVariable("id") id: Long): ResponseEntity<FullPersonDto> {
-        val user = service.findFullPersonDtoById(id)
+        val person = service.findPersonById(id)
+        person?.subscriptions?.size
+        val user = if (person != null) FullPersonDto(person) else null
 
         return if (user != null)
             ResponseEntity.ok(user)
@@ -43,7 +47,10 @@ class PersonController(private val service: PersonService) {
     }
 
     @PatchMapping("/{id}")
-    fun updatePerson(@PathVariable("id") id: Long, @RequestBody updates: RequestUpdatePersonDto): ResponseEntity<Person> {
+    fun updatePerson(
+        @PathVariable("id") id: Long,
+        @RequestBody updates: RequestUpdatePersonDto
+    ): ResponseEntity<Person> {
         try {
             val person = service.patchPerson(id, updates)
             return ResponseEntity.ok(person)

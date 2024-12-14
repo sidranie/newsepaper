@@ -11,20 +11,20 @@ import fr.sidranie.newsepaper.services.PersonService
 import org.springframework.stereotype.Service
 
 @Service
-class PersonServiceImpl(private val repository: PersonRepository): PersonService {
+class PersonServiceImpl(private val repository: PersonRepository) : PersonService {
 
     override fun findAllPeople(isPublisher: Boolean?): List<ShortPersonDto> {
-        val people: Set<Person> =  if (isPublisher == null) repository.findAll()
+        val people: Set<Person> = if (isPublisher == null) repository.findAll()
         else repository.findAllByIsPublisher(isPublisher)
 
         val mappedPeople = people.map {
-                ShortPersonDto(it)
-            }
+            ShortPersonDto(it)
+        }
 
         return mappedPeople
     }
 
-    override fun findPersonById(id: Long): Person? = repository.findById(id).orElse(null)
+    override fun findPersonById(id: Long): Person? = repository.findPersonWithSubscriptionsById(id)
 
     override fun findShortPersonDtoById(id: Long): ShortPersonDto? {
         val person = findPersonById(id)
@@ -45,7 +45,7 @@ class PersonServiceImpl(private val repository: PersonRepository): PersonService
             givenName = toCreate.givenName,
             familyName = toCreate.familyName,
             isPublisher = toCreate.isPublisher,
-            subscribedNewsletters = emptySet(),
+            subscriptions = mutableSetOf(),
         )
         return repository.save<Person>(person)
     }

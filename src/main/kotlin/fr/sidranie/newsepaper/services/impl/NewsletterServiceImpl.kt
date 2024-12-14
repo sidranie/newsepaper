@@ -16,8 +16,8 @@ import org.springframework.stereotype.Service
 class NewsletterServiceImpl(
     private val repository: NewsletterRepository,
     @Lazy private val personService: PersonService
-): NewsletterService {
-    override fun findAllNewsletters(): List<ShortNewsletterDto> = repository.findAll().map { ShortNewsletterDto(it)}
+) : NewsletterService {
+    override fun findAllNewsletters(): List<ShortNewsletterDto> = repository.findAll().map { ShortNewsletterDto(it) }
 
     override fun findNewsletterById(id: Long): Newsletter? = repository.findById(id).orElse(null)
 
@@ -45,7 +45,7 @@ class NewsletterServiceImpl(
             headline = toCreate.headline,
             abstract = toCreate.abstract,
             publisher = publisher,
-            followers = TODO(),
+            subscriptions = TODO(),
         )
 
         return repository.save<Newsletter>(newsletter)
